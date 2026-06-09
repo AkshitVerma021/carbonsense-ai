@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CarbonSense AI — Your Personal Carbon Coach</title>
+  <meta name="description" content="AI-powered carbon footprint tracker and coach" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ── NAVIGATION ───────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">
+      <span class="nav-logo">🌍</span>
+      <span class="nav-title">CarbonSense AI</span>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <button id="nav-chat"      class="nav-btn" aria-label="Go to chat">💬 Chat</button>
+      <button id="nav-dashboard" class="nav-btn" aria-label="Go to dashboard">📊 Dashboard</button>
+      <button id="nav-reset"     class="nav-btn nav-btn-danger" aria-label="Reset data">🔄 Reset</button>
+    </div>
+  </nav>
+
+  <!-- ── SCREEN: WELCOME ──────────────────────────────────── -->
+  <section id="screen-welcome" class="screen active" aria-label="Welcome screen">
+    <div class="welcome-container">
+
+      <div class="welcome-hero">
+        <div class="hero-icon">🌍</div>
+        <h1 class="hero-title">CarbonSense AI</h1>
+        <p class="hero-subtitle">Your personal AI carbon footprint coach</p>
+        <p class="hero-desc">
+          Understand your impact. Track your progress.<br/>
+          Take actions that actually matter.
+        </p>
+      </div>
+
+      <div class="features-row">
+        <div class="feature-card">
+          <span class="feature-icon">🤖</span>
+          <span class="feature-text">AI-powered insights</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📊</span>
+          <span class="feature-text">Visual tracking</span>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">✅</span>
+          <span class="feature-text">Personalized actions</span>
+        </div>
+      </div>
+
+      <div class="api-card" role="form" aria-label="API key setup">
+        <h2 class="api-card-title">Get Started</h2>
+        <p class="api-card-desc">
+          Enter your Anthropic API key to activate your AI coach.
+          <a href="https://console.anthropic.com" target="_blank" rel="noopener"
+             aria-label="Get API key from Anthropic console">Get one free →</a>
+        </p>
+        <form id="api-key-form" novalidate>
+          <div class="input-group">
+            <input
+              type="password"
+              id="api-key-input"
+              class="api-input"
+              placeholder="sk-ant-api03-..."
+              autocomplete="off"
+              aria-label="Anthropic API key"
+              aria-required="true"
+              required
+            />
+            <button type="submit" class="btn-primary" aria-label="Start CarbonSense">
+              Start 🚀
+            </button>
+          </div>
+        </form>
+        <p class="api-note">🔒 Your key is stored locally and never sent anywhere except Anthropic.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SCREEN: CHAT ──────────────────────────────────────── -->
+  <section id="screen-chat" class="screen" aria-label="Chat with AI coach">
+    <div class="chat-container">
+
+      <div class="chat-header">
+        <div class="chat-avatar" aria-hidden="true">🌱</div>
+        <div class="chat-header-info">
+          <span class="chat-name">CarbonSense AI</span>
+          <span class="chat-status">● Online</span>
+        </div>
+      </div>
+
+      <div
+        id="chat-messages"
+        class="chat-messages"
+        role="log"
+        aria-live="polite"
+        aria-label="Chat messages"
+      ></div>
+
+      <!-- Loading indicator -->
+      <div id="loading-indicator" class="loading-indicator" style="display:none"
+           aria-live="polite" aria-label="AI is thinking">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+
+      <div class="chat-input-area">
+        <textarea
+          id="chat-input"
+          class="chat-input"
+          placeholder="Type a message... (Enter to send)"
+          rows="1"
+          aria-label="Chat message input"
+          aria-multiline="false"
+        ></textarea>
+        <button id="send-btn" class="send-btn" aria-label="Send message">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SCREEN: DASHBOARD ─────────────────────────────────── -->
+  <section id="screen-dashboard" class="screen" aria-label="Carbon footprint dashboard">
+    <div class="dashboard-container">
+
+      <h2 class="dashboard-title">Your Carbon Dashboard</h2>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid" role="region" aria-label="Summary statistics">
+        <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">📅</span>
+          <span class="stat-label">Today's Footprint</span>
+          <span id="stat-today" class="stat-value">0.0 kg</span>
+          <span class="stat-sub">India avg: 5.2 kg/day</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">🔥</span>
+          <span class="stat-label">Logging Streak</span>
+          <span id="stat-streak" class="stat-value">0 days</span>
+          <span class="stat-sub">Keep it going!</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon" aria-hidden="true">💚</span>
+          <span class="stat-label">CO₂ Saved</span>
+          <span id="stat-savings" class="stat-value">0 kg</span>
+          <span class="stat-sub">From completed actions</span>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-card" role="region" aria-label="Weekly emissions chart">
+        <div class="chart-header">
+          <h3 class="chart-title">📈 Weekly Emissions</h3>
+          <span class="chart-legend">
+            <span class="legend-dot green"></span> Good
+            <span class="legend-dot yellow"></span> Moderate
+            <span class="legend-dot red"></span> High
+          </span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="weekly-chart" aria-label="Weekly carbon emissions bar chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="dashboard-actions">
+        <button id="log-today-btn" class="btn-primary" aria-label="Log today's activities">
+          📝 Log Today's Activities
+        </button>
+        <button id="weekly-report-btn" class="btn-secondary" aria-label="Get weekly AI report">
+          📊 Get Weekly AI Report
+        </button>
+      </div>
+
+      <!-- Actions List -->
+      <div class="actions-section" role="region" aria-label="Recommended actions">
+        <h3 class="actions-title">✅ Actions To Reduce Your Footprint</h3>
+        <p class="actions-subtitle">Check off actions you've taken — every step counts!</p>
+        <div id="actions-list" class="actions-list"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Scripts -->
+  <script src="carbon-data.js"></script>
+  <script src="tracker.js"></script>
+  <script src="ai-coach.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
