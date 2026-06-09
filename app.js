@@ -111,14 +111,20 @@ const App = {
     const input = document.getElementById("api-key-input");
     const key   = input?.value.trim();
 
-    if (!key || !key.startsWith("sk-ant-")) {
-      this.showToast("Please enter a valid Anthropic API key (starts with sk-ant-)", "error");
-      return;
+    // Allow empty key — triggers demo mode
+    if (key && !key.startsWith("sk-ant-")) {
+      this.showToast("Invalid API key format. Starting Demo Mode instead 🎮", "error");
+      AICoach.init(null);
+    } else if (key) {
+      localStorage.setItem("cs_apikey", key);
+      this.state.apiKey = key;
+      AICoach.init(key);
+      this.showToast("API key saved! Live AI mode activated 🤖", "success");
+    } else {
+      // No key entered — demo mode
+      AICoach.init(null);
+      this.showToast("Starting Demo Mode 🎮 — explore all features!", "success");
     }
-
-    localStorage.setItem("cs_apikey", key);
-    this.state.apiKey = key;
-    AICoach.init(key);
 
     this.showScreen("chat");
     this.beginOnboarding();

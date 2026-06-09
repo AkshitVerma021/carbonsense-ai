@@ -57,7 +57,7 @@
       <div class="api-card" role="form" aria-label="API key setup">
         <h2 class="api-card-title">Get Started</h2>
         <p class="api-card-desc">
-          Enter your Anthropic API key to activate your AI coach.
+          Optionally enter your Anthropic API key for live AI coaching.
           <a href="https://console.anthropic.com" target="_blank" rel="noopener"
              aria-label="Get API key from Anthropic console">Get one free →</a>
         </p>
@@ -67,17 +67,20 @@
               type="password"
               id="api-key-input"
               class="api-input"
-              placeholder="sk-ant-api03-..."
+              placeholder="sk-ant-api03-... (optional)"
               autocomplete="off"
-              aria-label="Anthropic API key"
-              aria-required="true"
-              required
+              aria-label="Anthropic API key (optional)"
+              aria-required="false"
             />
             <button type="submit" class="btn-primary" aria-label="Start CarbonSense">
               Start 🚀
             </button>
           </div>
         </form>
+        <div class="demo-notice">
+          🎮 <strong>No API key?</strong> No problem — click Start to try
+          Demo Mode with pre-loaded AI responses!
+        </div>
         <p class="api-note">🔒 Your key is stored locally and never sent anywhere except Anthropic.</p>
       </div>
 
