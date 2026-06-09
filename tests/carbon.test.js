@@ -75,11 +75,11 @@ const CarbonData = {
         target_2030: 2500
     },
     actions: [
-        { id: "public_transport", saving: 1500 },
-        { id: "plant_based_3days", saving: 420 },
-        { id: "no_beef", saving: 600 },
-        { id: "led_lights", saving: 100 },
-        { id: "buy_less_clothes", saving: 200 }
+        { id: "public_transport",  title: "Use Public Transport Daily",       saving: 1500 },
+        { id: "plant_based_3days", title: "Plant-Based Diet 3 Days/Week",     saving: 420  },
+        { id: "no_beef",           title: "Cut Beef from Diet",                saving: 600  },
+        { id: "led_lights",        title: "Switch to LED Lights",              saving: 100  },
+        { id: "buy_less_clothes",  title: "Buy 50% Less Clothing",             saving: 200  }
     ]
 };
 
@@ -340,6 +340,125 @@ TestRunner.run("Edge Cases & Robustness", () => {
         "Duplicate actions not double-counted in savings",
         getTotalSavings(["led_lights"]) === 100
     );
+
+});
+
+
+// Suite 8: Security & Input Sanitization
+TestRunner.run("Security & Input Sanitization", () => {
+
+  function sanitizeInput(input) {
+    if (typeof input !== "string") return "";
+    return input.trim().slice(0, 1000).replace(/[<>]/g, "");
+  }
+
+  TestRunner.assert(
+    "Strips HTML < and > characters",
+    sanitizeInput("<script>alert('xss')</script>") === "scriptalert('xss')/script"
+  );
+
+  TestRunner.assert(
+    "Trims whitespace",
+    sanitizeInput("  hello  ") === "hello"
+  );
+
+  TestRunner.assert(
+    "Returns empty string for non-string input",
+    sanitizeInput(null) === ""
+  );
+
+  TestRunner.assert(
+    "Truncates input over 1000 chars",
+    sanitizeInput("a".repeat(1500)).length === 1000
+  );
+
+  TestRunner.assert(
+    "Handles empty string",
+    sanitizeInput("") === ""
+  );
+
+});
+
+// Suite 9: Tracker Logic
+TestRunner.run("Tracker Data Logic", () => {
+
+  // Mock localStorage
+  const mockStorage = {};
+  const mockTracker = {
+    saveEntry(entry) {
+      const entries = this.loadEntries();
+      entry.id   = Date.now();
+      entry.date = new Date().toISOString().split("T")[0];
+      entries.push(entry);
+      mockStorage["cs_entries"] = JSON.stringify(entries);
+      return entry;
+    },
+    loadEntries() {
+      const raw = mockStorage["cs_entries"];
+      return raw ? JSON.parse(raw) : [];
+    },
+    getTodayFootprint() {
+      const today   = new Date().toISOString().split("T")[0];
+      const entries = this.loadEntries().filter(e => e.date === today);
+      return entries.reduce((sum, e) => sum + (e.total || 0), 0);
+    }
+  };
+
+  TestRunner.assert(
+    "Starts with empty entries",
+    mockTracker.loadEntries().length === 0
+  );
+
+  mockTracker.saveEntry({ total: 5.2, category: "transport" });
+
+  TestRunner.assert(
+    "Entry saved correctly",
+    mockTracker.loadEntries().length === 1
+  );
+
+  TestRunner.assertEqual(
+    "Today footprint sums correctly",
+    mockTracker.getTodayFootprint(),
+    5.2
+  );
+
+  mockTracker.saveEntry({ total: 3.1, category: "food" });
+
+  TestRunner.assertEqual(
+    "Multiple entries sum correctly",
+    mockTracker.getTodayFootprint(),
+    8.3
+  );
+
+});
+
+// Suite 10: Benchmark Comparisons
+TestRunner.run("Benchmark Comparisons", () => {
+
+  TestRunner.assert(
+    "India average is less than world average",
+    CarbonData.benchmarks.india_average < CarbonData.benchmarks.world_average
+  );
+
+  TestRunner.assert(
+    "Paris target is above India average",
+    CarbonData.benchmarks.target_2030 > CarbonData.benchmarks.india_average
+  );
+
+  TestRunner.assert(
+    "Actions array is not empty",
+    CarbonData.actions.length > 0
+  );
+
+  TestRunner.assert(
+    "All actions have required fields",
+    CarbonData.actions.every(a => a.id && a.saving && a.title)
+  );
+
+  TestRunner.assert(
+    "All savings values are positive",
+    CarbonData.actions.every(a => a.saving > 0)
+  );
 
 });
 

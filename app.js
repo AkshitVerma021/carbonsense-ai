@@ -1,7 +1,24 @@
+/**
+ * @fileoverview CarbonSense AI — Main Application Controller
+ * @description Wires together AI, Tracker, and CarbonData modules.
+ *              Manages screen routing, UI state, event handling,
+ *              and chart rendering.
+ * @version 1.0.0
+ */
+
 // app.js
 // Main application controller — wires AI, Tracker, and CarbonData together
 
 const App = {
+
+  // ── Security Helpers ─────────────────────────────────────────────────
+  sanitizeInput(input) {
+    if (typeof input !== "string") return "";
+    return input
+      .trim()
+      .slice(0, 1000) // max input length
+      .replace(/[<>]/g, ""); // strip HTML tags
+  },
 
   state: {
     screen:       "welcome",   // welcome | setup | chat | dashboard
@@ -142,7 +159,7 @@ const App = {
   // ── Chat Handling ─────────────────────────────────────────────────
   async handleChatSend() {
     const input = document.getElementById("chat-input");
-    const text  = input?.value.trim();
+    const text  = this.sanitizeInput(input?.value || "");
     if (!text || this.state.loading) return;
 
     input.value = "";
@@ -387,13 +404,21 @@ const App = {
     const container = document.getElementById("chat-messages");
     if (!container) return;
 
-    const div       = document.createElement("div");
-    div.className   = `message message-${role}`;
+    const div     = document.createElement("div");
+    div.className = `message message-${role}`;
     div.setAttribute("role", "article");
     div.setAttribute("aria-label", `${role === "user" ? "You" : "CarbonSense"} said`);
 
-    // Convert basic markdown bold (**text**) to <strong>
-    const formatted = text
+    // Sanitize input — prevent XSS
+    const sanitized = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;");
+
+    // Now safely apply markdown formatting
+    const formatted = sanitized
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\n/g, "<br>");
 

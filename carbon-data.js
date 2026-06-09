@@ -1,3 +1,16 @@
+/**
+ * @fileoverview CarbonSense AI — Emissions Data Module
+ * @description Real-world CO2 emissions factors, benchmarks, and action library.
+ * @version 1.0.0
+ * @author CarbonSense AI
+ *
+ * Data Sources:
+ * - Transport: UK DEFRA 2023 Emissions Factors
+ * - Food: Poore & Nemecek 2018 (Science journal)
+ * - Energy: India CEA Grid Emission Factor 2023
+ * - Benchmarks: Global Carbon Project 2023
+ */
+
 // carbon-data.js
 // Real-world CO2 emissions factors (kg CO2 per unit)
 

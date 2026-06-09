@@ -1,3 +1,10 @@
+/**
+ * @fileoverview CarbonSense AI — Persistence Layer
+ * @description Handles all localStorage operations for profiles,
+ *              carbon entries, completed actions, and streak tracking.
+ * @version 1.0.0
+ */
+
 // tracker.js
 // Handles all localStorage persistence — saving & loading user data
 

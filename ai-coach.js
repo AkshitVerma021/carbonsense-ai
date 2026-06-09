@@ -1,3 +1,11 @@
+/**
+ * @fileoverview CarbonSense AI — AI Coach Module
+ * @description Manages Claude AI conversations with full demo mode fallback.
+ *              Handles onboarding, profile analysis, daily check-ins,
+ *              and free-form sustainability coaching.
+ * @version 1.0.0
+ */
+
 // ai-coach.js
 // Handles all Claude AI interactions with Demo Mode fallback
 
@@ -100,13 +108,15 @@ You're already making good choices. Small, consistent changes make a huge differ
     // ── Initialize ────────────────────────────────────────────────────
     init(apiKey) {
         if (apiKey && apiKey.startsWith("sk-ant-")) {
-            this.apiKey = apiKey;
+            // Sanitize key — remove any whitespace or injected chars
+            this.apiKey   = apiKey.replace(/[^a-zA-Z0-9\-_]/g, "").trim();
             this.demoMode = false;
         } else {
+            this.apiKey   = null;
             this.demoMode = true;
         }
         this.conversationHistory = [];
-        this.demoStep = 0;
+        this.demoStep            = 0;
     },
 
     // ── Core API Call ─────────────────────────────────────────────────
