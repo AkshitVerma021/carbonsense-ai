@@ -1,0 +1,6 @@
+.git
+.gcloudignore
+Dockerfile
+.dockerignore
+app.yaml
+tests

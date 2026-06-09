@@ -1,0 +1,13 @@
+runtime: python311
+instance_class: F1
+
+handlers:
+  # Route the root URL to index.html
+  - url: /
+    static_files: index.html
+    upload: index.html
+
+  # Route all other URLs to the matching local static files
+  - url: /(.*)
+    static_files: \1
+    upload: (.*)
