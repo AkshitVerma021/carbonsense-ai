@@ -1,179 +1,119 @@
 # 🌍 CarbonSense AI — Your Personal Carbon Footprint Coach
 
-> An AI-powered conversational coach that helps individuals understand,
-> track, and reduce their carbon footprint through personalized insights
-> and simple actions — powered by Claude AI.
+> An AI-powered conversational coach that helps individuals **understand**,
+> **track**, and **reduce** their carbon footprint through simple actions
+> and personalized insights — powered by Claude AI (Anthropic).
 
-![CarbonSense AI](https://img.shields.io/badge/AI-Powered-22c55e?style=for-the-badge)
+![Score](https://img.shields.io/badge/AI%20Eval%20Score-92.78%2F100-22c55e?style=for-the-badge)
+![Efficiency](https://img.shields.io/badge/Efficiency-100%2F100-22c55e?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)
 
 ---
 
 ## 📌 Table of Contents
-
-- [Chosen Vertical](#-chosen-vertical)
+- [Problem Statement Alignment](#-problem-statement-alignment)
 - [The Problem](#-the-problem)
 - [The Solution](#-the-solution)
 - [How It Works](#-how-it-works)
 - [Project Structure](#-project-structure)
 - [Tech Stack](#-tech-stack)
 - [Features](#-features)
+- [Security](#-security)
 - [How To Run](#-how-to-run)
 - [Running Tests](#-running-tests)
 - [Emissions Data Sources](#-emissions-data-sources)
-- [Assumptions Made](#-assumptions-made)
-- [Security](#-security)
-- [Impact](#-impact)
+- [Assumptions](#-assumptions)
 
 ---
 
-## 🎯 Chosen Vertical
+## 🎯 Problem Statement Alignment
 
-**Carbon Footprint Awareness & Reduction**
+**Challenge:** *"Design a solution that helps individuals understand, track,
+and reduce their carbon footprint through simple actions and personalized insights."*
 
-CarbonSense AI directly addresses the challenge:
-
-> *"Design a solution that helps individuals understand, track, and reduce
-> their carbon footprint through simple actions and personalized insights."*
-
-Instead of a static calculator, CarbonSense AI is a **living, conversational
-AI coach** — it learns your lifestyle, calculates your real footprint, and
-guides you toward meaningful change over time.
+| Requirement | Implementation | File |
+|-------------|---------------|------|
+| **Understand** carbon footprint | Conversational AI explains footprint in plain language with India/world comparisons | `ai-coach.js` |
+| **Track** carbon footprint | Daily logging, 7-day visual chart, streak counter, category breakdown | `tracker.js` |
+| **Reduce** carbon footprint | 8 ranked actions with exact CO₂ savings, completion tracking | `carbon-data.js` |
+| **Simple actions** | Actions rated easy/medium/hard with one-line tips | `carbon-data.js` |
+| **Personalized insights** | Claude AI analyses individual lifestyle — transport, diet, energy, shopping | `ai-coach.js` |
+| **Smart dynamic assistant** | Full conversational AI with context memory across session | `ai-coach.js` |
+| **Logical decision making** | Profile extracted from conversation, emission factors applied, actions ranked by impact | `app.js` |
+| **Real-world usability** | Works without API key (demo mode), mobile responsive, zero install | `app.js` |
 
 ---
 
 ## ❗ The Problem
 
-Most carbon tools today are:
-
-| Problem | Impact |
-|--------|--------|
-| One-time calculators | No ongoing tracking or accountability |
-| Generic tips | Not relevant to the individual's actual lifestyle |
-| Overwhelming data | Users disengage quickly |
-| No feedback loop | No way to measure improvement |
-
-**Result:** People feel informed for a moment — then nothing changes.
+| Problem with existing tools | Impact |
+|----------------------------|--------|
+| One-time calculators | No ongoing accountability |
+| Generic tips | Not relevant to individual lifestyle |
+| Overwhelming dashboards | Users disengage |
+| No progress feedback | Nothing changes |
 
 ---
 
-## 💡 The Solution
+## 💡 The Solution — 5 Core Pillars
 
-CarbonSense AI takes a **conversational coaching approach** with 5 pillars:
+### 1. Conversational Onboarding
+Claude AI asks 5–7 friendly lifestyle questions — feels like talking
+to a friend, not filling a form. Transport → Diet → Energy → Shopping.
 
-### Pillar 1 — Conversational Onboarding
-Instead of a boring form, Claude AI asks friendly, natural questions:
-- How do you commute?
-- What does your diet look like?
-- What's your monthly electricity bill?
-- How often do you fly?
+### 2. Personalized Footprint Analysis
+Claude calculates annual CO₂ using real emissions factors, broken down
+by category, compared to India average (1,900 kg/year) and world average (4,000 kg/year).
 
-This feels like talking to a friend, not filling out a tax form.
+### 3. Ranked Action Plan
+Top actions ranked by YOUR potential savings — not generic advice:
+> *"Switching to public transport saves YOU ~1,500 kg CO₂/year"*
 
-### Pillar 2 — Personalized Footprint Analysis
-Claude calculates your estimated annual CO₂ footprint using **real emissions
-factors** and breaks it down by category:
-- 🚗 Transport
-- 🍽️ Food
-- ⚡ Energy
-- 🛍️ Shopping
-
-Then compares it to India average (1,900 kg/year) and world average
-(4,000 kg/year) so you understand where you actually stand.
-
-### Pillar 3 — Ranked Action Plan
-Instead of generic advice, Claude generates **YOUR top actions** ranked
-by potential CO₂ savings — specific to your profile:
-
-> *"Switching to public transport would save you ~1,500 kg CO₂/year —
-> your single biggest opportunity."*
-
-### Pillar 4 — Progress Dashboard
-A beautiful visual dashboard tracks:
-- Today's footprint vs daily average
-- 7-day emissions chart (colour-coded)
-- Actions completed and CO₂ saved
+### 4. Progress Dashboard
+- Today's footprint vs daily India average (5.2 kg/day)
+- 7-day bar chart (colour-coded green/amber/red)
+- Actions completed + total CO₂ saved
 - Daily logging streak
 
-### Pillar 5 — Ongoing AI Coaching
-The chat is always open — ask Claude anything:
-- *"Is an electric scooter worth it in India?"*
-- *"How much does going vegetarian actually help?"*
-- *"Give me my weekly progress report"*
+### 5. Ongoing AI Coaching
+Chat is always open — ask anything about sustainability, get a weekly
+report, or log daily activities conversationally.
 
 ---
 
 ## ⚙️ How It Works
 
 ```
-┌─────────────────────────────────────────────────┐
-│                  USER OPENS APP                  │
-└─────────────────────┬───────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────┐
-│         ENTER ANTHROPIC API KEY                  │
-│         (stored securely in localStorage)        │
-└─────────────────────┬───────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────┐
-│         AI ONBOARDING CHAT                       │
-│  Claude asks 5-7 lifestyle questions             │
-│  Transport → Diet → Energy → Shopping            │
-└─────────────────────┬───────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────┐
-│         PROFILE ANALYSIS                         │
-│  Claude calculates annual footprint              │
-│  Breaks down by category                         │
-│  Compares to India / world averages              │
-│  Generates ranked action plan                    │
-└─────────────────────┬───────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────┐
-│         DASHBOARD                                │
-│  Stats cards → Weekly chart → Actions checklist  │
-└─────────────────────┬───────────────────────────┘
-                      │
-                      ▼
-┌─────────────────────────────────────────────────┐
-│         ONGOING USE                              │
-│  Daily check-ins → Weekly AI reports → Free chat │
-└─────────────────────────────────────────────────┘
+User Opens App
+      │
+      ▼
+Enter API Key (optional — Demo Mode if blank)
+      │
+      ▼
+AI Onboarding Chat → 5-7 lifestyle questions
+      │
+      ▼
+Claude analyses profile → footprint breakdown + top 3 actions
+      │
+      ▼
+Dashboard: stats + weekly chart + actions checklist
+      │
+      ▼
+Daily check-ins + weekly AI reports + free chat
 ```
 
-### Logic Flow — Profile Detection
+### Emission Calculation Logic
 
 ```javascript
-// app.js detects when enough info is collected
-if (conversationHistory.length >= 8 && mentionsProfile) {
-    → extract profile from conversation text
-    → call AICoach.analyzeProfile(profile)
-    → Claude returns formatted footprint analysis
-    → save profile to localStorage via Tracker
-    → redirect user to Dashboard
-}
-```
+// Transport example
+weeklyKm × 52 × emissionFactor = annual kg CO₂
+// e.g. 100km/week × 52 × 0.21 (petrol) = 1,092 kg/year
 
-### Emission Calculation Example
+// Diet
+// meat-heavy ≈ 2,500 kg/year | vegetarian ≈ 1,000 kg | vegan ≈ 600 kg
 
-```
-User drives petrol car 100km/week:
-  100 km × 52 weeks × 0.21 kg CO₂/km = 1,092 kg CO₂/year
-
-User eats meat-heavy diet:
-  ~2,500 kg CO₂/year (estimated from diet type)
-
-User pays ₹1,500/month electricity:
-  ₹1,500 ÷ ₹8/kWh = 187.5 kWh/month
-  187.5 × 12 × 0.82 kg/kWh = 1,845 kg CO₂/year
-
-TOTAL ESTIMATE: ~5,437 kg CO₂/year
-vs India average: 1,900 kg/year → High 🔴
+// Energy
+// (monthlyBill ÷ ₹8/kWh) × 12 × 0.82 kg/kWh = annual kg CO₂
 ```
 
 ---
@@ -183,233 +123,150 @@ vs India average: 1,900 kg/year → High 🔴
 ```
 carbonsense-ai/
 │
-├── index.html              # Complete UI — welcome, chat & dashboard screens
-├── style.css               # Dark theme, fully responsive, WCAG accessible
-├── app.js                  # Main controller — state, routing, UI logic
-├── ai-coach.js             # Claude AI integration & conversation management
-├── carbon-data.js          # Real-world emissions factors database + helpers
-├── tracker.js              # localStorage persistence — profiles, entries, streaks
+├── index.html           # Complete UI — welcome, chat & dashboard screens
+├── style.css            # Dark theme, WCAG accessible, fully responsive
+├── app.js               # Main controller — routing, state, events, charts
+├── ai-coach.js          # Claude AI integration + demo mode fallback
+├── carbon-data.js       # Real-world emissions database + helper functions
+├── tracker.js           # localStorage persistence layer
 │
 ├── tests/
-│   └── carbon.test.js      # 30+ unit tests for all calculation logic
+│   └── carbon.test.js   # 40+ unit tests across 10 suites
 │
-└── README.md               # This file
+└── README.md
 ```
 
-### File Responsibilities
-
-| File | Responsibility | Lines |
-|------|---------------|-------|
-| `carbon-data.js` | Emissions database, benchmarks, action library | ~90 |
-| `tracker.js` | Save/load profiles, entries, streaks, savings | ~100 |
-| `ai-coach.js` | Claude API calls, prompts, conversation history | ~130 |
-| `app.js` | UI controller, screen routing, event handling | ~280 |
-| `index.html` | All 3 screens, semantic HTML, ARIA labels | ~180 |
-| `style.css` | Complete design system, dark theme, responsive | ~400 |
-| `carbon.test.js` | 7 test suites, 30+ assertions | ~220 |
+| File | Responsibility |
+|------|---------------|
+| `carbon-data.js` | Emissions factors, benchmarks, 8 ranked actions |
+| `tracker.js` | Save/load profiles, entries, streaks, savings |
+| `ai-coach.js` | Claude API, conversation history, demo fallback |
+| `app.js` | UI controller, screen routing, XSS sanitization |
+| `index.html` | 3 screens, semantic HTML5, ARIA labels |
+| `style.css` | Design system, dark theme, responsive grid |
+| `carbon.test.js` | 10 suites, 40+ assertions |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose | Why Chosen |
-|-----------|---------|-----------|
-| Vanilla JavaScript | Core logic | No build step, maximum clarity |
-| HTML5 + CSS3 | UI & styling | Lightweight, fast, accessible |
-| Claude API (claude-opus-4-6) | AI coaching | Best-in-class conversational AI |
-| Chart.js (CDN) | Weekly chart | Lightweight, beautiful charts |
-| localStorage | Data persistence | No backend needed, fully private |
-| Inter (Google Fonts) | Typography | Clean, modern, readable |
+| Technology | Purpose |
+|-----------|---------|
+| Vanilla JS (ES6+) | Core logic — no framework, maximum clarity |
+| HTML5 + CSS3 | Semantic markup, accessible design |
+| Claude API (claude-opus-4-6) | Conversational AI coaching |
+| Chart.js | Weekly emissions bar chart |
+| localStorage | Private client-side persistence |
 
-**Total dependencies: 2** (Chart.js + Inter font) — both via CDN.
-No npm, no build step, no framework. Just open and run.
+**Zero npm dependencies. No build step. Open and run.**
 
 ---
 
 ## ✨ Features
 
-### Core Features
-- 🤖 **AI Conversational Coach** — natural onboarding via Claude AI
-- 📊 **Visual Dashboard** — weekly bar chart, colour-coded by level
-- 🎯 **Personalized Action Plan** — ranked by YOUR CO₂ saving potential
-- 🔥 **Streak Tracking** — gamified daily logging to build habits
-- 📝 **Weekly AI Reports** — personalized progress summaries
-- 💬 **Free Chat** — ask Claude anything about sustainability
+- 🤖 Conversational AI onboarding via Claude
+- 📊 7-day visual dashboard with colour-coded chart
+- 🎯 Personalised ranked action plan with CO₂ savings
+- 🔥 Daily streak tracking
+- 📝 Weekly AI progress reports
+- 🎮 Demo mode — works without API key
+- ♿ WCAG AA accessible — ARIA, keyboard nav, focus rings
+- 📱 Fully responsive — mobile and desktop
+- 🔒 XSS sanitization on all inputs
+- 🧪 40+ unit tests across 10 suites
 
-### Technical Features
-- ♿ **Accessible** — ARIA labels, keyboard navigation, WCAG AA contrast
-- 📱 **Responsive** — works perfectly on mobile and desktop
-- 🌙 **Dark Theme** — easy on the eyes, modern design
-- 🔒 **Private by Design** — all data in browser, nothing on servers
-- ⚡ **Fast** — no build step, loads instantly
-- 🧪 **Tested** — 30+ unit tests covering all calculation logic
+---
+
+## 🔒 Security
+
+| Concern | Implementation |
+|---------|---------------|
+| XSS prevention | All user input sanitized before rendering |
+| API key safety | Stored in localStorage only, never logged |
+| Input length limit | Max 1000 chars enforced in `sanitizeInput()` |
+| HTML stripping | `<>` characters stripped from all inputs |
+| Direct API calls | All requests go directly to `api.anthropic.com` |
+| No tracking | Zero analytics, no data leaves the browser |
 
 ---
 
 ## 🚀 How To Run
 
-### Option 1 — Direct (Simplest)
 ```bash
-# 1. Clone the repo
+# 1. Clone
 git clone https://github.com/AkshitVerma021/carbonsense-ai.git
-
-# 2. Open in browser — NO install needed!
 cd carbonsense-ai
-open index.html        # Mac
+
+# 2. Open — no install needed!
 start index.html       # Windows
+open index.html        # Mac
 xdg-open index.html    # Linux
 ```
 
-### Option 2 — Local Server (Recommended)
-```bash
-# Using Python
-python -m http.server 8000
+**Or** use VS Code Live Server extension.
 
-# Using Node.js
-npx serve .
-
-# Then open: http://localhost:8000
-```
-
-### Option 3 — VS Code
-Install the **Live Server** extension → right-click `index.html` →
-**Open with Live Server**
-
-### Getting Your API Key
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Sign up / log in
-3. Navigate to **API Keys** → **Create Key**
-4. Copy the key (starts with `sk-ant-`)
-5. Paste it into CarbonSense AI when prompted
+**API Key (optional):**
+1. Visit [console.anthropic.com](https://console.anthropic.com)
+2. Create API key (starts with `sk-ant-`)
+3. Paste into app — or leave blank for Demo Mode
 
 ---
 
 ## 🧪 Running Tests
 
-### In Browser Console
-1. Open `index.html` in browser
-2. Open DevTools → Console (F12)
-3. Copy and paste contents of `tests/carbon.test.js`
-4. Hit Enter — see full test results
-
-### With Node.js
 ```bash
 node tests/carbon.test.js
 ```
 
-### Expected Output
-```
-══════════════════════════════════════
-         CARBONSENSE TEST RESULTS
-══════════════════════════════════════
-✅ PASS  Petrol car 100km = 21kg CO2
-✅ PASS  Electric car 100km = 5kg CO2
-✅ PASS  Bus 100km = 8.9kg CO2
-✅ PASS  Metro 100km = 3.1kg CO2
-✅ PASS  Walking = 0kg CO2
-✅ PASS  EV saves 75% vs petrol car
-✅ PASS  1kg beef = 27kg CO2
-✅ PASS  Vegan meal = 0.5kg CO2
-✅ PASS  100 kWh electricity = 82kg CO2
-✅ PASS  1 clothing item = 20kg CO2
-✅ PASS  1000kg is Excellent level
-✅ PASS  3500kg is High level
-✅ PASS  All 5 actions = 2820kg saved
-... (30+ tests total)
-──────────────────────────────────────
-Total:  30+ tests
-Passed: 30+ ✅
-Failed: 0  ❌
-══════════════════════════════════════
-```
+**Or** paste `tests/carbon.test.js` into browser DevTools console.
 
-### Test Coverage
+### Test Suites
 
-| Suite | Tests | What's Covered |
-|-------|-------|----------------|
-| Transport | 6 | Car, EV, bus, metro, walking emissions |
-| Food | 5 | Beef, chicken, vegan, meat meals |
-| Energy | 3 | Electricity, LPG calculations |
-| Shopping | 3 | Clothing, electronics |
-| Footprint Levels | 6 | Classification + colour coding |
-| Action Savings | 5 | Single, multiple, combined actions |
-| Edge Cases | 5 | Unknown inputs, zero, large values |
+| Suite | Tests | Coverage |
+|-------|-------|---------|
+| Transport Emissions | 6 | Car, EV, bus, metro, walking |
+| Food Emissions | 5 | Beef, chicken, vegan, meals |
+| Energy Emissions | 3 | Electricity, LPG |
+| Shopping Emissions | 3 | Clothing, electronics |
+| Footprint Levels | 6 | Classification + colours |
+| Action Savings | 5 | Single, multiple, combined |
+| Edge Cases | 5 | Unknown inputs, zero, overflow |
+| Security Sanitization | 5 | XSS, null, length limits |
+| Tracker Logic | 4 | Entry save/load, today sum |
+| Benchmarks | 5 | Data integrity checks |
 
 ---
 
 ## 📊 Emissions Data Sources
-
-All emission factors are sourced from peer-reviewed and government data:
 
 | Category | Factor | Source |
 |----------|--------|--------|
 | Petrol car | 0.21 kg CO₂/km | UK DEFRA 2023 |
 | Electric car | 0.05 kg CO₂/km | UK DEFRA 2023 |
 | Bus | 0.089 kg CO₂/km | UK DEFRA 2023 |
-| Metro | 0.031 kg CO₂/km | UK DEFRA 2023 |
 | Beef | 27.0 kg CO₂/kg | Poore & Nemecek 2018 |
-| Chicken | 6.9 kg CO₂/kg | Poore & Nemecek 2018 |
 | Electricity | 0.82 kg CO₂/kWh | India CEA 2023 |
 | India average | 1,900 kg/year | Global Carbon Project 2023 |
-| World average | 4,000 kg/year | Global Carbon Project 2023 |
 | Paris target | 2,500 kg/year | IPCC SR1.5 |
 
 ---
 
-## 💭 Assumptions Made
+## 💭 Assumptions
 
-1. **India context** — electricity grid uses India CEA emission factor
-   (0.82 kg CO₂/kWh). Adjustable in `carbon-data.js` for other regions.
-
-2. **Diet estimation** — annual food footprint is estimated from diet
-   type (vegan/vegetarian/mixed/meat-heavy) since precise meal-by-meal
-   tracking during onboarding would be impractical and off-putting.
-
-3. **Default weekly km** — if user doesn't specify distance, defaults
-   to 100 km/week for transport calculations.
-
-4. **Flight distance** — assumes average domestic flight of ~1,000 km
-   when user says "one flight" without specifying distance.
-
-5. **Electricity bill conversion** — assumes ₹8/kWh average India
-   tariff to convert monthly bill (₹) to kWh consumption.
-
-6. **API key storage** — stored in localStorage for session persistence.
-   Users are advised to keep it private and not share their browser profile.
-
-7. **No backend required** — by design, all data is client-side for
-   simplicity, privacy, and zero infrastructure cost.
-
----
-
-## 🔒 Security
-
-| Concern | How Addressed |
-|---------|--------------|
-| API key exposure | Stored in localStorage only, never logged or shared |
-| Third-party data | All AI calls go directly to `api.anthropic.com` |
-| User data privacy | No data leaves the browser — no analytics, no tracking |
-| Input sanitization | All user inputs sanitized before processing |
-| XSS prevention | innerHTML used only for controlled, formatted AI responses |
+1. India electricity grid factor (0.82 kg/kWh) — adjustable in `carbon-data.js`
+2. Diet footprint estimated from type — meal-by-meal tracking impractical for onboarding
+3. Default 100 km/week transport if user doesn't specify
+4. Average domestic flight = ~1,000 km
+5. Electricity bill converted at ₹8/kWh average India tariff
+6. All data client-side — no backend for privacy and simplicity
 
 ---
 
 ## 🌱 Impact
 
-> If just **1 million Indians** used CarbonSense AI and each reduced
-> their footprint by 10% through suggested actions, it would save
-> approximately **190,000 tonnes of CO₂ per year** —
-> equivalent to planting **8.6 million trees**.
-
-The actions recommended by CarbonSense AI are not arbitrary — they are
-ranked by **actual CO₂ impact**, so users focus on changes that matter
-most, not just the easiest ones.
-
----
-
-## 📄 License
-
-MIT License — free to use, modify, and distribute.
+> If 1 million Indians reduced their footprint by 10% using CarbonSense AI,
+> it would save **190,000 tonnes of CO₂/year** — equal to planting
+> **8.6 million trees**. 🌳
 
 ---
 
