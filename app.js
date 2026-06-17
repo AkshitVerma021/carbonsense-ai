@@ -1,7 +1,7 @@
 /**
  * @fileoverview CarbonSense AI — Main Application Controller
  * @description Manages screen routing, UI state, event handling,
- *              chart rendering, and coordinates all modules.
+ *              chart rendering and coordinates all modules.
  * @version 2.0.0
  * @license MIT
  */
@@ -12,15 +12,15 @@ const App = {
 
   /** @type {{screen: string, apiKey: string|null, profile: object|null, loading: boolean}} */
   state: {
-    screen:     "welcome",
-    apiKey:     null,
-    profile:    null,
-    loading:    false
+    screen:  "welcome",
+    apiKey:  null,
+    profile: null,
+    loading: false
   },
 
   // ── Boot ──────────────────────────────────────────────────────────
   /**
-   * Initialises the application — loads saved state and routes to correct screen.
+   * Initialises the app — loads saved state and routes to correct screen.
    * @returns {Promise<void>}
    */
   async init() {
@@ -82,10 +82,12 @@ const App = {
     }
 
     document.getElementById("nav-chat")?.addEventListener("click", () => this.showScreen("chat"));
+
     document.getElementById("nav-dashboard")?.addEventListener("click", () => {
       this.showScreen("dashboard");
       this.renderDashboard();
     });
+
     document.getElementById("nav-reset")?.addEventListener("click", () => {
       if (confirm("Reset all your data and start fresh?")) {
         Tracker.clearAll();
@@ -93,11 +95,15 @@ const App = {
         location.reload();
       }
     });
+
     document.getElementById("log-today-btn")?.addEventListener("click", () => {
       this.showScreen("chat");
       this.promptDailyCheckin();
     });
-    document.getElementById("weekly-report-btn")?.addEventListener("click", () => this.generateWeeklyReport());
+
+    document.getElementById("weekly-report-btn")?.addEventListener("click", () => {
+      this.generateWeeklyReport();
+    });
   },
 
   // ── Security Helpers ──────────────────────────────────────────────
@@ -115,17 +121,19 @@ const App = {
   },
 
   /**
-   * Validates an Anthropic API key format.
-   * @param {string} key - API key to validate
+   * Validates Anthropic API key format.
+   * @param {string} key
    * @returns {boolean}
    */
   isValidApiKey(key) {
-    return typeof key === "string" && key.startsWith("sk-ant-") && key.length > 20;
+    return typeof key === "string" &&
+           key.startsWith("sk-ant-") &&
+           key.length > 20;
   },
 
-  // ── API Key Handling ──────────────────────────────────────────────
+  // ── API Key Submit ────────────────────────────────────────────────
   /**
-   * Handles API key form submission — validates, saves, and starts onboarding.
+   * Handles API key form submission.
    */
   handleApiKeySubmit() {
     try {
@@ -133,13 +141,13 @@ const App = {
       const key   = input?.value.trim();
 
       if (key && !this.isValidApiKey(key)) {
-        this.showToast("Invalid API key format. Starting Demo Mode instead 🎮", "error");
+        this.showToast("Invalid key format. Starting Demo Mode 🎮", "error");
         AICoach.init(null);
       } else if (key) {
         localStorage.setItem("cs_apikey", key);
         this.state.apiKey = key;
         AICoach.init(key);
-        this.showToast("API key saved! Live AI mode activated 🤖", "success");
+        this.showToast("Live AI mode activated 🤖", "success");
       } else {
         AICoach.init(null);
         this.showToast("Starting Demo Mode 🎮 — explore all features!", "success");
@@ -155,7 +163,7 @@ const App = {
 
   // ── Onboarding ────────────────────────────────────────────────────
   /**
-   * Starts the AI onboarding conversation flow.
+   * Starts the AI onboarding conversation.
    * @returns {Promise<void>}
    */
   async beginOnboarding() {
@@ -169,9 +177,9 @@ const App = {
     }
   },
 
-  // ── Chat Handling ─────────────────────────────────────────────────
+  // ── Chat Send ─────────────────────────────────────────────────────
   /**
-   * Handles sending a chat message — sanitizes input, calls AI, renders response.
+   * Handles sending a chat message.
    * @returns {Promise<void>}
    */
   async handleChatSend() {
@@ -184,10 +192,11 @@ const App = {
     this.setLoading(true);
 
     try {
-      const lowerText      = text.toLowerCase();
-      const profileKeywords = ["flight", "diet", "electricity", "vegetarian",
-                               "vegan", "meat", "car", "bike", "metro", "bus",
-                               "shop", "energy", "bill", "walk", "cycle"];
+      const lowerText       = text.toLowerCase();
+      const profileKeywords = [
+        "flight","diet","electricity","vegetarian","vegan","meat",
+        "car","bike","metro","bus","shop","energy","bill","walk","cycle"
+      ];
       const mentionsProfile = profileKeywords.some(k => lowerText.includes(k));
 
       let result;
@@ -216,8 +225,8 @@ const App = {
 
   // ── Profile Analysis ──────────────────────────────────────────────
   /**
-   * Triggers AI profile analysis based on conversation history.
-   * @param {string} lastMessage - The user's most recent message
+   * Triggers AI profile analysis from conversation history.
+   * @param {string} lastMessage
    * @returns {Promise<{success: boolean, message: string}>}
    */
   async triggerProfileAnalysis(lastMessage) {
@@ -231,38 +240,38 @@ const App = {
   },
 
   /**
-   * Extracts a structured profile from raw conversation text.
-   * @param {string} text - Combined conversation text
-   * @returns {{transport: string, diet: string, weeklyKm: number, flights: number, electricityBill: number, shopping: string}}
+   * Extracts a structured profile object from raw conversation text.
+   * @param {string} text
+   * @returns {object} Profile data
    */
   extractProfileFromText(text) {
     const lower = text.toLowerCase();
 
     let transport = "car_petrol";
-    if (lower.includes("electric"))                              transport = "car_electric";
+    if (lower.includes("electric"))                               transport = "car_electric";
     else if (lower.includes("metro") || lower.includes("subway")) transport = "metro";
-    else if (lower.includes("bus"))                              transport = "bus";
-    else if (lower.includes("bike") || lower.includes("cycle")) transport = "walking";
-    else if (lower.includes("train"))                           transport = "train";
+    else if (lower.includes("bus"))                               transport = "bus";
+    else if (lower.includes("bike") || lower.includes("cycle"))  transport = "walking";
+    else if (lower.includes("train"))                            transport = "train";
     else if (lower.includes("work from home") || lower.includes("wfh")) transport = "walking";
 
     let diet = "mixed";
-    if (lower.includes("vegan"))                                      diet = "vegan";
+    if (lower.includes("vegan"))                                       diet = "vegan";
     else if (lower.includes("vegetarian") || lower.includes("veggie")) diet = "vegetarian";
-    else if (lower.includes("meat") || lower.includes("non-veg"))     diet = "meat-heavy";
+    else if (lower.includes("meat") || lower.includes("non-veg"))      diet = "meat-heavy";
 
-    const kmMatch      = text.match(/(\d+)\s*km/i);
-    const weeklyKm     = kmMatch ? parseInt(kmMatch[1]) : 100;
+    const kmMatch         = text.match(/(\d+)\s*km/i);
+    const weeklyKm        = kmMatch ? parseInt(kmMatch[1]) : 100;
 
-    const flightMatch  = text.match(/(\d+)\s*flight/i);
-    const flights      = flightMatch ? parseInt(flightMatch[1]) : 2;
+    const flightMatch     = text.match(/(\d+)\s*flight/i);
+    const flights         = flightMatch ? parseInt(flightMatch[1]) : 2;
 
     const billMatch       = text.match(/₹?\s*(\d+)/);
     const electricityBill = billMatch ? parseInt(billMatch[1]) : 1500;
 
     let shopping = "moderate";
-    if (lower.includes("shop a lot") || lower.includes("online"))   shopping = "heavy";
-    else if (lower.includes("minimal") || lower.includes("rarely")) shopping = "minimal";
+    if (lower.includes("shop a lot") || lower.includes("online"))    shopping = "heavy";
+    else if (lower.includes("minimal") || lower.includes("rarely"))  shopping = "minimal";
 
     const profile = { transport, diet, weeklyKm, flights, electricityBill, shopping };
     Tracker.saveProfile(profile);
@@ -271,7 +280,7 @@ const App = {
   },
 
   /**
-   * Saves profile and updates streak after analysis completes.
+   * Finalises profile save and updates streak.
    */
   extractAndSaveProfile() {
     try {
@@ -287,7 +296,7 @@ const App = {
    * @returns {Promise<void>}
    */
   async promptDailyCheckin() {
-    const prompt = "I want to log today's carbon activities. Ask me what I did today for transport, food and energy in a friendly conversational way.";
+    const prompt = "I want to log today's carbon activities. Ask me about my transport, food and energy use today in a friendly way.";
     this.appendMessage("user", prompt);
     this.setLoading(true);
 
@@ -303,7 +312,7 @@ const App = {
 
   // ── Weekly Report ─────────────────────────────────────────────────
   /**
-   * Generates and displays an AI weekly report.
+   * Generates and displays a weekly AI progress report.
    * @returns {Promise<void>}
    */
   async generateWeeklyReport() {
@@ -314,6 +323,7 @@ const App = {
       const weeklyData       = Tracker.getWeeklyData();
       const completedActions = Tracker.loadCompletedActions();
       const result           = await AICoach.generateWeeklyReport(weeklyData, completedActions);
+
       if (result.success) {
         this.appendMessage("assistant", `📊 **Your Weekly Report**\n\n${result.message}`);
       }
@@ -327,7 +337,7 @@ const App = {
 
   // ── Dashboard ─────────────────────────────────────────────────────
   /**
-   * Renders all dashboard components — stats, chart, actions.
+   * Renders all dashboard components.
    */
   renderDashboard() {
     try {
@@ -340,7 +350,6 @@ const App = {
       this.setText("stat-streak",  `${streak.count} days`);
       this.setText("stat-savings", `${savings} kg saved`);
 
-      // Footprint level badge
       const annualEstimate = todayTotal > 0 ? todayTotal * 365 : 1900;
       const level          = getFootprintLevel(annualEstimate);
       const levelEl        = document.getElementById("footprint-level");
@@ -388,7 +397,7 @@ const App = {
 
   /**
    * Toggles an action's completion state.
-   * @param {string} actionId - The action identifier
+   * @param {string} actionId
    */
   toggleAction(actionId) {
     if (!actionId || typeof actionId !== "string") return;
@@ -405,8 +414,8 @@ const App = {
   },
 
   /**
-   * Renders the weekly emissions bar chart using Chart.js.
-   * @param {Array<{date: string, total: number}>} weeklyData
+   * Renders the weekly emissions bar chart.
+   * @param {Array} weeklyData
    */
   renderWeeklyChart(weeklyData) {
     const canvas = document.getElementById("weekly-chart");
@@ -442,8 +451,15 @@ const App = {
             tooltip: { callbacks: { label: ctx => `${ctx.raw} kg CO₂` } }
           },
           scales: {
-            y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.1)" }, ticks: { color: "#94a3b8" } },
-            x: { grid: { display: false }, ticks: { color: "#94a3b8" } }
+            y: {
+              beginAtZero: true,
+              grid:  { color: "rgba(255,255,255,0.1)" },
+              ticks: { color: "#94a3b8" }
+            },
+            x: {
+              grid:  { display: false },
+              ticks: { color: "#94a3b8" }
+            }
           }
         }
       });
@@ -454,7 +470,7 @@ const App = {
 
   // ── UI Helpers ────────────────────────────────────────────────────
   /**
-   * Appends a chat message bubble to the messages container.
+   * Appends a chat message to the conversation.
    * @param {"user"|"assistant"} role
    * @param {string} text
    */
@@ -467,7 +483,7 @@ const App = {
     div.setAttribute("role", "article");
     div.setAttribute("aria-label", `${role === "user" ? "You" : "CarbonSense"} said`);
 
-    // Sanitize then format
+    // Sanitize to prevent XSS then apply safe markdown
     const sanitized = text
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -490,7 +506,7 @@ const App = {
   },
 
   /**
-   * Shows or hides the loading/typing indicator.
+   * Shows or hides the typing/loading indicator.
    * @param {boolean} isLoading
    */
   setLoading(isLoading) {
@@ -524,6 +540,7 @@ const App = {
       toast.setAttribute("aria-live", "assertive");
       toast.textContent = message;
       document.body.appendChild(toast);
+
       setTimeout(() => toast.classList.add("visible"), 10);
       setTimeout(() => {
         toast.classList.remove("visible");
@@ -535,7 +552,7 @@ const App = {
   },
 
   /**
-   * Shows dashboard navigation prompt after onboarding completes.
+   * Shows navigation prompt after onboarding completes.
    */
   showDashboardPrompt() {
     setTimeout(() => {
